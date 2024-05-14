@@ -148,7 +148,7 @@ main() {
 
     # If API key is supplied, check the backend version, and send a GET to the relevant endpoints.
     if [[ ! -z ${API_KEY} ]]; then
-        BACKEND_VERSION=$(kubectl ${CONTEXT_OPTS} ${KUBE_OPTS} get deployment sysdigcloud-api -ojsonpath='{.spec.template.spec.containers[0].image}' | awk 'match($0, /[0-9]\.[0-9]\.[0-9](\.[0-9]+)?/) {print substr($0, RSTART, RLENGTH)}') || true
+        BACKEND_VERSION=$(kubectl ${CONTEXT_OPTS} ${KUBE_OPTS} get deployment sysdigcloud-api -ojsonpath='{.spec.template.spec.containers[0].image}' | awk 'match($0, /[0-9]+\.[0-9]+\.[0-9](\.[0-9]+)?/) {print substr($0, RSTART, RLENGTH)}') || true
         if [[ "$BACKEND_VERSION" =~ ^(6) ]]; then
             API_URL=$(kubectl ${KUBE_OPTS} get cm sysdigcloud-collector-config -ojsonpath='{.data.collector-config\.conf}' | sed '1,/sso {/d' | grep -m1 'serverName' | awk '{gsub(/"/,""); print $3 }')
             # Check that the API_KEY for the Super User is valid and exit 
@@ -188,7 +188,7 @@ main() {
 
     # If Secure API key is supplied, collect settings
     if [[ ! -z ${SECURE_API_KEY} ]]; then                                                                     
-        BACKEND_VERSION=$(kubectl ${CONTEXT_OPTS} ${KUBE_OPTS} get deployment sysdigcloud-api -ojsonpath='{.spec.template.spec.containers[0].image}' | awk 'match($0, /[0-9]\.[0-9]\.[0-9](\.[0-9]+)?/) {print substr($0, RSTART, RLENGTH)}') || true
+        BACKEND_VERSION=$(kubectl ${CONTEXT_OPTS} ${KUBE_OPTS} get deployment sysdigcloud-api -ojsonpath='{.spec.template.spec.containers[0].image}' | awk 'match($0, /[0-9]+\.[0-9]+\.[0-9](\.[0-9]+)?/) {print substr($0, RSTART, RLENGTH)}') || true
         if [[ "$BACKEND_VERSION" =~ ^(6) ]]; then                                                             
             API_URL=$(kubectl ${KUBE_OPTS} get cm sysdigcloud-collector-config -ojsonpath='{.data.collector-config\.conf}' | sed '1,/sso {/d' | grep -m1 'serverName' | awk '{gsub(/"/,""); print $3 }')                                                        
             # Check that the SECURE_API_KEY for the Super User is valid and exit                              
